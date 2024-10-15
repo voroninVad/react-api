@@ -8,6 +8,7 @@ function App() {
   const [year, setYear] = useState('')
   const [idChangeItem, setIdChangeItem] = useState(0)
 
+  const [btnDel, setBtnDel] = useState(false)
   const [btnSave, setBtnSave] = useState(false)
 
   useEffect(() => {
@@ -25,8 +26,9 @@ function App() {
         console.error('Error fetching:', error.message);
       }
     };
-    fetchData(); 
-  }, [btnSave])
+    fetchData()
+    setBtnDel(false)
+  }, [btnSave,btnDel])
   const addItem = async (e) =>{
     e.preventDefault()
 
@@ -61,10 +63,10 @@ function App() {
   }
 
   const removeItem = async (idItem) => {
-    fetch(`https://fd892fe3ea3da442.mokky.dev/products/${idItem}`, {
-      method: "DELETE",
-    });
-    setTimeout(() => location.reload(),1500)
+    await fetch(`https://fd892fe3ea3da442.mokky.dev/products/${idItem}`, {
+      method: "DELETE"
+    })
+    setBtnDel(true)
   }
   const changeItem = async (id) =>{
     const response = await fetch(`https://fd892fe3ea3da442.mokky.dev/products/${id}`); 
@@ -74,6 +76,10 @@ function App() {
     setYear(data.year)
     setBtnSave(true)
     setIdChangeItem(id)
+    window.scrollTo({
+      top:0,
+      behavior: 'smooth'
+    })
   }
   const saveItem = async (e)=>{
     e.preventDefault()
